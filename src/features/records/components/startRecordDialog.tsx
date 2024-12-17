@@ -163,7 +163,7 @@ export function StartRecordDialog({onNewRecord}: DialogProps) {
     try {
       const formData = new FormData()
       formData.append('audio', audioBlob, 'recording.wav')
-      formData.append('source', activeTab)
+      formData.append('duration', recordingTime.toString())
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/records`, {
         method: 'POST',
@@ -188,92 +188,91 @@ export function StartRecordDialog({onNewRecord}: DialogProps) {
   }
 
   return <Dialog>
-        
-        <DialogTrigger asChild>
-            <Button className="relative">
-                Grabar
+    <DialogTrigger asChild>
+        <Button className="relative">
+            Grabar
+        </Button>
+    </DialogTrigger>
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Record Audio</DialogTitle>
+        <DialogDescription>
+          Choose a source and start recording your audio.
+        </DialogDescription>
+      </DialogHeader>
+      <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as 'mic' | 'icecast')}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="mic">Microphone</TabsTrigger>
+          <TabsTrigger value="icecast">Icecast Stream</TabsTrigger>
+        </TabsList>
+        <TabsContent value="mic">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="text-4xl font-bold">
+              {formatTime(recordingTime)}
+            </div>
+            <Button
+              onClick={isRecording ? stopRecording : startRecording}
+              className="w-16 h-16 rounded-full"
+            >
+              {isRecording ? (
+                <Square className="h-8 w-8" />
+              ) : (
+                <Mic className="h-8 w-8" />
+              )}
             </Button>
-        </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Record Audio</DialogTitle>
-          <DialogDescription>
-            Choose a source and start recording your audio.
-          </DialogDescription>
-        </DialogHeader>
-        <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as 'mic' | 'icecast')}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="mic">Microphone</TabsTrigger>
-            <TabsTrigger value="icecast">Icecast Stream</TabsTrigger>
-          </TabsList>
-          <TabsContent value="mic">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="text-4xl font-bold">
-                {formatTime(recordingTime)}
-              </div>
-              <Button
-                onClick={isRecording ? stopRecording : startRecording}
-                className="w-16 h-16 rounded-full"
-              >
-                {isRecording ? (
-                  <Square className="h-8 w-8" />
-                ) : (
-                  <Mic className="h-8 w-8" />
-                )}
-              </Button>
-              <span className="text-sm text-gray-500">
-                {isRecording ? 'Recording...' : 'Ready to record'}
-              </span>
+            <span className="text-sm text-gray-500">
+              {isRecording ? 'Recording...' : 'Ready to record'}
+            </span>
+          </div>
+        </TabsContent>
+        <TabsContent value="icecast">
+          <div className="flex flex-col items-center space-y-4">
+            <Input
+              type="url"
+              placeholder="Enter Icecast stream URL"
+              value={icecastUrl}
+              onChange={(e) => setIcecastUrl(e.target.value)}
+              disabled={isRecording}
+            />
+            <div className="text-4xl font-bold">
+              {formatTime(recordingTime)}
             </div>
-          </TabsContent>
-          <TabsContent value="icecast">
-            <div className="flex flex-col items-center space-y-4">
-              <Input
-                type="url"
-                placeholder="Enter Icecast stream URL"
-                value={icecastUrl}
-                onChange={(e) => setIcecastUrl(e.target.value)}
-                disabled={isRecording}
-              />
-              <div className="text-4xl font-bold">
-                {formatTime(recordingTime)}
-              </div>
-              <Button
-                onClick={isRecording ? stopRecording : startRecording}
-                className="w-16 h-16 rounded-full"
-                disabled={!icecastUrl && !isRecording}
-              >
-                {isRecording ? (
-                  <Square className="h-8 w-8" />
-                ) : (
-                  <Radio className="h-8 w-8" />
-                )}
-              </Button>
-              <span className="text-sm text-gray-500">
-                {isRecording ? 'Recording...' : 'Ready to record'}
-              </span>
-            </div>
-          </TabsContent>
-        </Tabs>
-        {error && (
-          <div className="text-red-500 text-sm mt-2">{error}</div>
-        )}
-        {audioBlob && !isRecording && (
-          <Button
-            onClick={uploadAudio}
-            disabled={isUploading}
-            className="mt-4 w-full"
-          >
-            {isUploading ? (
-              'Uploading...'
-            ) : (
-              <>
-                <Upload className="mr-2 h-4 w-4" /> Upload Recording
-              </>
-            )}
-          </Button>
-        )}
-      </DialogContent>
-    </Dialog>
+            <Button
+              onClick={isRecording ? stopRecording : startRecording}
+              className="w-16 h-16 rounded-full"
+              disabled={!icecastUrl && !isRecording}
+            >
+              {isRecording ? (
+                <Square className="h-8 w-8" />
+              ) : (
+                <Radio className="h-8 w-8" />
+              )}
+            </Button>
+            <span className="text-sm text-gray-500">
+              {isRecording ? 'Recording...' : 'Ready to record'}
+            </span>
+          </div>
+        </TabsContent>
+      </Tabs>
+      {error && (
+        <div className="text-red-500 text-sm mt-2">{error}</div>
+      )}
+      {audioBlob && !isRecording && (
+        <Button
+          onClick={uploadAudio}
+          disabled={isUploading}
+          className="mt-4 w-full"
+        >
+          {isUploading ? (
+            'Uploading...'
+          ) : (
+            <>
+              <Upload className="mr-2 h-4 w-4" /> Upload Recording
+            </>
+          )}
+        </Button>
+      )}
+    </DialogContent>
+  </Dialog>
 }
 

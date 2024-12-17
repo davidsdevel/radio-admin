@@ -18,7 +18,5 @@ export async function stopRecording(id: string) {
 export async function updateRecord(id: string, data: RecordUpdateDTO) {
     const record = await updater<RecordEntity>('PATCH', `/records/${id}`, data);
 
-    console.log(record);
-
     return record;
 }
