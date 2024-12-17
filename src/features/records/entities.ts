@@ -1,4 +1,4 @@
-export type RecordListQuery = Record<string, any>
+export type RecordListQuery = Record<string, string | string[] | undefined>
 
 export interface RecordEntity {
     id: string;
@@ -7,7 +7,7 @@ export interface RecordEntity {
     description: string | null;
     date: string;
     duration: number;
-    status: 'RECORDING' | 'DRAFT' | 'PUBLISHED';    
+    status: 'PROCESSING' | 'DRAFT' | 'PUBLISHED';
 }
 
 export interface PaginatedRecords {
@@ -18,4 +18,10 @@ export interface PaginatedRecords {
         startCursor: string,
         endCursor: string
     }
+}
+
+export interface RecordUpdateDTO {
+    title?: string | null;
+    description?: string | null;
+    status?: 'RECORDING' | 'DRAFT' | 'PUBLISHED';
 }

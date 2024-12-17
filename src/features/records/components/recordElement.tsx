@@ -1,11 +1,10 @@
 'use client'
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { RecordEntity } from "../entities"
 import { Button } from '@/components/ui/button'
 import { secondsToTime } from "@/lib/date"
-import { useActualPlaying } from '../Records'
 import { stopRecording } from "../actions"
 import { useState } from "react"
 import { useRouter } from "next/navigation"

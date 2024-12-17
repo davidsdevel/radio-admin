@@ -1,6 +1,6 @@
 'use server'
 
-import {RecordEntity} from './entities'
+import {RecordEntity, RecordUpdateDTO} from './entities'
 import updater from '@/lib/updater'
 
 export async function startNewLoad() {
@@ -11,6 +11,14 @@ export async function startNewLoad() {
 
 export async function stopRecording(id: string) {
     const record = await updater<RecordEntity>('POST', `/records/${id}/end-record`);
+
+    return record;
+}
+
+export async function updateRecord(id: string, data: RecordUpdateDTO) {
+    const record = await updater<RecordEntity>('PATCH', `/records/${id}`, data);
+
+    console.log(record);
 
     return record;
 }

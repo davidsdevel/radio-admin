@@ -1,16 +1,22 @@
-const endpoint = process.env.API_ENDPOINT;
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-export default async function updater<T>(method: 'POST' | 'PATCH' | 'DELETE', path: string, fetchData?: Record<string, any>): Promise<T> {
+export default async function updater<T>(method: 'POST' | 'PATCH' | 'DELETE', path: string, fetchData?: Record<string, string | number | boolean | string[]> | FormData): Promise<T> {
     const headers = {}
     const fetchConfig: RequestInit = {
         method
     }
 
     if (fetchData) {
-        fetchConfig.body = JSON.stringify(fetchData);
-        fetchConfig.headers = {
-            ...headers,
-            'Content-Type': 'application/json'
+        if (fetchData instanceof FormData) {
+            fetchConfig.body = fetchData;
+            fetchConfig.headers = headers
+        }
+        else {
+            fetchConfig.body = JSON.stringify(fetchData);
+            fetchConfig.headers = {
+                ...headers,
+                'Content-Type': 'application/json'
+            }
         }
     }
     

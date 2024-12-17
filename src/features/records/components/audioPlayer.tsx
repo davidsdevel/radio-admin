@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useRef, useEffect, RefObject } from 'react'
-import dynamic from 'next/dynamic'
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react'
 import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'

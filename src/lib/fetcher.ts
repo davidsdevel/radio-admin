@@ -1,6 +1,6 @@
-const endpoint = process.env.API_ENDPOINT;
+const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-export default async function fetcher<T>(path: string, query?: Record<string, any>): Promise<T> {
+export default async function fetcher<T>(path: string, query?: Record<string, string>): Promise<T> {
     const queryString = query ? `?${new URLSearchParams(query).toString()}` : '';
 
     //TODO: Handle auth
